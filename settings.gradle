@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        gradlePluginPortal()
+    }
+}
+
+include 'core'
+include 'cache'
+include 'web'
+
+rootProject.name = 'al-common'
+
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+
+    project.children.each {
+        it.buildFileName = it.name + '.gradle'
+    }
+}

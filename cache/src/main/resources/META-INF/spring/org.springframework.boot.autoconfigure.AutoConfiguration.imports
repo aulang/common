@@ -1,0 +1,3 @@
+cn.aulang.common.cache.conf.CachingAutoConfiguration
+cn.aulang.common.cache.conf.RedisCacheAutoConfiguration
+cn.aulang.common.cache.conf.CaffeineCacheAutoConfiguration

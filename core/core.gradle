@@ -1,0 +1,15 @@
+apply from: "$rootDir/gradle/library-module.gradle"
+
+dependencies {
+    api 'org.apache.commons:commons-lang3'
+
+    implementation 'commons-beanutils:commons-beanutils'
+
+    optional 'org.slf4j:slf4j-api'
+    optional 'com.fasterxml.jackson.core:jackson-databind'
+
+    compileOnly 'jakarta.annotation:jakarta.annotation-api'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}

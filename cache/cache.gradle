@@ -1,0 +1,14 @@
+apply from: "$rootDir/gradle/library-module.gradle"
+
+dependencies {
+    api 'org.springframework.boot:spring-boot-starter-cache'
+
+    optional 'com.github.ben-manes.caffeine:caffeine'
+    optional 'org.redisson:redisson-spring-boot-starter'
+    optional 'com.fasterxml.jackson.core:jackson-databind'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+}

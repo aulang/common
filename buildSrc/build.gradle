@@ -1,0 +1,17 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+}
+
+gradlePlugin {
+    plugins {
+        optionalDependenciesPlugin {
+            id = "cn.aulang.common.build.optional-dependencies"
+            implementationClass = "cn.aulang.common.build.optional.OptionalDependenciesPlugin"
+        }
+    }
+}
