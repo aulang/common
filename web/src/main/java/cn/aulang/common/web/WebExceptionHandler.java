@@ -25,97 +25,102 @@ public class WebExceptionHandler {
 
     @ExceptionHandler(value = ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(ConstraintViolationException e) {
-        return e.getConstraintViolations()
+    public WebResponse<String> exceptionHandler(ConstraintViolationException e) {
+        String msg = e.getConstraintViolations()
                 .stream()
                 .map(error -> error.getPropertyPath() + Constant.SPACE + error.getMessage())
                 .collect(Collectors.joining(Constant.SEMICOLON));
+
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(MethodArgumentNotValidException e) {
-        return e.getBindingResult()
+    public WebResponse<String> exceptionHandler(MethodArgumentNotValidException e) {
+        String msg = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + Constant.SPACE + error.getDefaultMessage())
                 .collect(Collectors.joining(Constant.SEMICOLON));
+
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(IllegalArgumentException e) {
-        return e.getMessage();
+    public WebResponse<String> exceptionHandler(IllegalArgumentException e) {
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(MissingServletRequestParameterException e) {
-        return e.getMessage();
+    public WebResponse<String> exceptionHandler(MissingServletRequestParameterException e) {
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = TypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(TypeMismatchException e) {
-        return e.getMessage();
+    public WebResponse<String> exceptionHandler(TypeMismatchException e) {
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(HttpMessageNotReadableException e) {
-        return StringUtils.substringBefore(e.getMessage(), Constant.SEMICOLON);
+    public WebResponse<String> exceptionHandler(HttpMessageNotReadableException e) {
+        String msg = StringUtils.substringBefore(e.getMessage(), Constant.SEMICOLON);
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
     }
 
     @ExceptionHandler(value = ParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(ParameterException e) {
-        return e.getMessage();
+    public WebResponse<String> exceptionHandler(ParameterException e) {
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = SearchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(SearchException e) {
+    public WebResponse<String> exceptionHandler(SearchException e) {
         log.warn("Search error", e);
-        return e.getMessage();
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = DuplicateKeyException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String exceptionHandler(DuplicateKeyException e) {
+    public WebResponse<String> exceptionHandler(DuplicateKeyException e) {
         log.warn("Duplicate key error", e);
-        return "重复的数据，记录已存在";
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), "重复的数据，记录已存在");
     }
 
     @ExceptionHandler(value = NotFoundException.class)
     @ResponseStatus(HttpStatus.GONE)
-    public String exceptionHandler(NotFoundException e) {
-        return "Id " + e.getId() + " is not found";
+    public WebResponse<String> exceptionHandler(NotFoundException e) {
+        return WebResponse.of(HttpStatus.GONE.value(), "Id " + e.getId() + " is not found");
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
-    public String exceptionHandler(HttpRequestMethodNotSupportedException e) {
-        return e.getMessage();
+    public WebResponse<String> exceptionHandler(HttpRequestMethodNotSupportedException e) {
+        return WebResponse.of(HttpStatus.METHOD_NOT_ALLOWED.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = ServiceException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String exceptionHandler(ServiceException e) {
+    public WebResponse<String> exceptionHandler(ServiceException e) {
         log.error("Service error", e);
-        return e.getMessage();
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
     }
 
     @ExceptionHandler(value = NullPointerException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String exceptionHandler(NullPointerException e) {
+    public WebResponse<String> exceptionHandler(NullPointerException e) {
         log.error("Server internal NPE error", e);
-        return "服务器内部错误";
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器内部错误");
     }
 
     @ExceptionHandler(value = Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String exceptionHandler(Exception e) {
+    public WebResponse<String> exceptionHandler(Exception e) {
         log.error("Server internal error", e);
-        return e.getMessage();
+        return WebResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
     }
 }
