@@ -59,14 +59,14 @@ allprojects {
                 url 'https://maven.aliyun.com/repository/public'
             }
             maven {
-                url "https://$maven_registry/maven/repository/2110124-release-FYMnre/"
+                url "$maven_registry_release_url"
                 credentials {
                     username "$maven_registry_username"
                     password "$maven_registry_password"
                 }
             }
             maven {
-                url "https://$maven_registry/maven/repository/2110124-snapshot-DoCVfz/"
+                url "$maven_registry_snapshot_url"
                 credentials {
                     username "$maven_registry_username"
                     password "$maven_registry_password"

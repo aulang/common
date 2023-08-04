@@ -1,3 +1,6 @@
+description('al-core')
+archivesBaseName = 'al-core'
+
 apply from: "$rootDir/gradle/library-module.gradle"
 
 dependencies {

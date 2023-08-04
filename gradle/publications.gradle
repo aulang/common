@@ -22,26 +22,12 @@ publishing {
 
     repositories {
         maven {
-            def snapshotsRepoUrl = "https://$maven_registry/maven/repository/2110124-snapshot-DoCVfz/"
-            def releasesRepoUrl = "https://$maven_registry/maven/repository/2110124-release-FYMnre/"
+            def snapshotsRepoUrl = "$maven_registry_snapshot_url"
+            def releasesRepoUrl = "$maven_registry_release_url"
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username "$maven_registry_username"
                 password "$maven_registry_password"
-            }
-        }
-    }
-}
-
-configureDeploymentRepository(project)
-
-static void configureDeploymentRepository(Project project) {
-    project.plugins.withType(MavenPublishPlugin.class).configureEach {
-        PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class)
-        if (project.hasProperty('deploymentRepository')) {
-            publishing.repositories.maven {
-                it.url = project.property('deploymentRepository')
-                it.name = 'deployment'
             }
         }
     }
