@@ -6,7 +6,7 @@ apply from: "$rootDir/gradle/library-module.gradle"
 dependencies {
     api(project(':core'))
 
-    api 'tk.mybatis-jakarta:spring-boot-starter'
+    api 'tk.mybatis-jakarta:mapper-spring-boot-starter'
 
     api 'org.springframework.boot:spring-boot-starter-web'
     api 'org.springframework.boot:spring-boot-starter-actuator'
