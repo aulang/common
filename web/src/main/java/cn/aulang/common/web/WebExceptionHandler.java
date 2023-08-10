@@ -26,24 +26,24 @@ public class WebExceptionHandler {
     @ExceptionHandler(value = ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public WebResponse<String> exceptionHandler(ConstraintViolationException e) {
-        String msg = e.getConstraintViolations()
+        String message = e.getConstraintViolations()
                 .stream()
                 .map(error -> error.getPropertyPath() + Constant.SPACE + error.getMessage())
                 .collect(Collectors.joining(Constant.SEMICOLON));
 
-        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), message);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public WebResponse<String> exceptionHandler(MethodArgumentNotValidException e) {
-        String msg = e.getBindingResult()
+        String message = e.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + Constant.SPACE + error.getDefaultMessage())
                 .collect(Collectors.joining(Constant.SEMICOLON));
 
-        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), message);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)
@@ -67,8 +67,8 @@ public class WebExceptionHandler {
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public WebResponse<String> exceptionHandler(HttpMessageNotReadableException e) {
-        String msg = StringUtils.substringBefore(e.getMessage(), Constant.SEMICOLON);
-        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), msg);
+        String message = StringUtils.substringBefore(e.getMessage(), Constant.SEMICOLON);
+        return WebResponse.of(HttpStatus.BAD_REQUEST.value(), message);
     }
 
     @ExceptionHandler(value = ParameterException.class)

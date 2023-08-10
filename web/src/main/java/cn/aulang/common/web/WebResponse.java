@@ -16,12 +16,12 @@ public class WebResponse<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int code;
-    private String msg;
+    private String message;
     private T data;
 
-    public WebResponse(int code, String msg) {
+    public WebResponse(int code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
     public static <T> WebResponse<T> success() {
@@ -40,15 +40,19 @@ public class WebResponse<T> implements Serializable {
         return of(code, null, null);
     }
 
+    public static <T> WebResponse<T> fail(String message) {
+        return of(500, message, null);
+    }
+
     public static <T> WebResponse<T> of(int code) {
         return of(code, null, null);
     }
 
-    public static <T> WebResponse<T> of(int code, String msg) {
-        return of(code, msg, null);
+    public static <T> WebResponse<T> of(int code, String message) {
+        return of(code, message, null);
     }
 
-    public static <T> WebResponse<T> of(int code, String msg, T data) {
-        return new WebResponse<>(code, msg, data);
+    public static <T> WebResponse<T> of(int code, String message, T data) {
+        return new WebResponse<>(code, message, data);
     }
 }
