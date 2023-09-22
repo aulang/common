@@ -1,5 +1,8 @@
 description('al-cache')
-archivesBaseName = 'al-cache'
+
+ext {
+    artifactId = 'al-cache'
+}
 
 apply from: "$rootDir/gradle/library-module.gradle"
 

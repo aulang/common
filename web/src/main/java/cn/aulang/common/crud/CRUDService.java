@@ -1,19 +1,13 @@
 package cn.aulang.common.crud;
 
 import cn.aulang.common.core.utils.Reflections;
+import cn.aulang.common.crud.id.IdEntity;
 import cn.aulang.common.exception.SaveException;
 import cn.aulang.common.exception.SearchException;
-import cn.aulang.common.crud.id.IdEntity;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable> implements GenericService<T, K> {
 
@@ -23,7 +17,6 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public Page<T> search(Page<T> page) throws SearchException {
         try {
             page.entityClass(Reflections.getSuperClassGenericType(this.getClass()));
@@ -31,7 +24,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
             page.setList(getRepository().search(page));
             return page;
         } catch (Exception e) {
-            throw new SearchException("Query parameter error", e);
+            throw new SearchException("查询参数错误", e);
         }
     }
 
@@ -39,7 +32,6 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public T get(K id) {
         return getRepository().get(id);
     }
@@ -48,7 +40,6 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public List<T> findAll() {
         return getRepository().findAll();
     }
@@ -57,7 +48,6 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional(readOnly = true)
     public boolean exists(K id) {
         return getRepository().exists(id);
     }
@@ -66,7 +56,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void create(T entity) throws SaveException {
         getRepository().create(entity);
     }
@@ -75,7 +65,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void save(T entity) {
         doSaveOrUpdate(entity, true);
     }
@@ -84,7 +74,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void saveTotally(T entity) throws SaveException {
         doSaveOrUpdate(entity, false);
     }
@@ -92,23 +82,18 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
     /**
      * Save or update an entity
      *
-     * @param entity       the entity
-     * @param excludeNulls exclude null values?
+     * @param entity      the entity
+     * @param excludeNull exclude null values?
      */
-    private void doSaveOrUpdate(T entity, boolean excludeNulls) {
-        if (!entity.isNew() && excludeNulls && exists(entity.getId())) {
-            T savedEntity = getRepository().get(entity.getId());
-            BeanUtils.copyProperties(entity, savedEntity, getNullPropertyNames(entity));
-            getRepository().update(savedEntity);
-        }
-        getRepository().saveOrUpdate(entity);
+    private void doSaveOrUpdate(T entity, boolean excludeNull) {
+        getRepository().saveOrUpdate(entity, excludeNull);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int remove(T entity) {
         if (!onRemove(entity.getId())) {
             return 0;
@@ -122,7 +107,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int remove(K id) {
         if (onRemove(id)) {
             int count = getRepository().remove(id);
@@ -136,7 +121,7 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
      * {@inheritDoc}
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int remove(K[] ids) {
         int success = 0;
         try {
@@ -157,20 +142,5 @@ public abstract class CRUDService<T extends IdEntity<K>, K extends Serializable>
     }
 
     protected void postRemove(K id) {
-    }
-
-    private String[] getNullPropertyNames(Object source) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
-        PropertyDescriptor[] pds = src.getPropertyDescriptors();
-
-        Set<String> nullProperties = new HashSet<>();
-        for (PropertyDescriptor pd : pds) {
-            Object value = src.getPropertyValue(pd.getName());
-            if (value == null) {
-                nullProperties.add(pd.getName());
-            }
-        }
-        String[] result = new String[nullProperties.size()];
-        return nullProperties.toArray(result);
     }
 }

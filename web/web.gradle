@@ -1,5 +1,8 @@
 description('al-core')
-archivesBaseName = 'al-web'
+
+ext {
+    artifactId = 'al-web'
+}
 
 apply from: "$rootDir/gradle/library-module.gradle"
 

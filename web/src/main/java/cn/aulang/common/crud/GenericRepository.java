@@ -64,9 +64,10 @@ public interface GenericRepository<T extends IdEntity<K>, K extends Serializable
     /**
      * Generic method to save an object - handles both update and insert.
      *
-     * @param object the object to save
+     * @param object      the object to save
+     * @param excludeNull exclude null values?
      */
-    void saveOrUpdate(T object);
+    void saveOrUpdate(T object, boolean excludeNull);
 
     /**
      * Generic method to delete an object.

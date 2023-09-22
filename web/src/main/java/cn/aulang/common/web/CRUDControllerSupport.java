@@ -30,12 +30,12 @@ public abstract class CRUDControllerSupport<T extends IdEntity<K>, K extends Ser
     }
 
     @GetMapping
-    public ResponseEntity<?> get(@RequestParam K id) {
+    public ResponseEntity<?> getByQuery(@RequestParam K id) {
         return doGet(id);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> get0(@PathVariable K id) {
+    public ResponseEntity<?> getByPath(@PathVariable K id) {
         return doGet(id);
     }
 
@@ -47,25 +47,25 @@ public abstract class CRUDControllerSupport<T extends IdEntity<K>, K extends Ser
         return ResponseEntity.ok(entity);
     }
 
-    @PostMapping("batch-remove")
-    public ResponseEntity<?> remove(@RequestParam K[] id) {
-        int count = service().remove(id);
-        return ResponseEntity.ok().body(count + " recorders deleted");
-    }
-
     @DeleteMapping
-    public ResponseEntity<?> remove(@RequestParam K id) {
+    public ResponseEntity<?> removeByQuery(@RequestParam K id) {
         return doRemove(id);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> remove0(@PathVariable K id) {
+    public ResponseEntity<?> removeByPath(@PathVariable K id) {
         return doRemove(id);
+    }
+
+    @DeleteMapping("batch")
+    public ResponseEntity<?> batchRemove(@RequestParam K[] id) {
+        int count = service().remove(id);
+        return ResponseEntity.ok().body(count + "条记录被删除");
     }
 
     protected ResponseEntity<?> doRemove(@RequestParam K id) {
         int count = service().remove(id);
-        return ResponseEntity.ok().body(count + " recorders deleted");
+        return ResponseEntity.ok().body(count + "条记录被删除");
     }
 
     @PostMapping("search")

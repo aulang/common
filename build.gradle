@@ -1,22 +1,21 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
-    id 'org.springframework.boot' version '3.1.2' apply false
-    id 'io.spring.dependency-management' version '1.1.2' apply false
-    id 'com.google.cloud.tools.jib' version '3.3.2' apply false
+    id 'org.springframework.boot' version '3.1.4' apply false
+    id 'io.spring.dependency-management' version '1.1.3' apply false
+    id 'com.google.cloud.tools.jib' version '3.4.0' apply false
 }
 
 ext {
-    set('springCloudVersion', '2022.0.3')
+    set('springCloudVersion', '2022.0.4')
     javaProjects = subprojects.findAll { it.childProjects.isEmpty() }
 }
 
 allprojects {
-
     group = 'cn.aulang.common'
     version = '1.0.0'
 
-    buildDir = "$rootDir/build/" + outputDir(project)
+    layout.buildDirectory = "$rootDir/build/" + outputDir(project)
 
     apply plugin: 'io.spring.dependency-management'
 
@@ -28,7 +27,7 @@ allprojects {
         }
 
         dependencies {
-            dependencySet(group: 'org.slf4j', version: '2.0.7') {
+            dependencySet(group: 'org.slf4j', version: '2.0.9') {
                 entry 'slf4j-api'
                 entry 'jcl-over-slf4j'
             }
@@ -39,17 +38,17 @@ allprojects {
                 entry 'jackson-annotations'
             }
 
-            dependency 'org.apache.commons:commons-lang3:3.12.0'
+            dependency 'org.apache.commons:commons-lang3:3.13.0'
             dependency 'commons-beanutils:commons-beanutils:1.9.4'
 
-            dependency 'org.projectlombok:lombok:1.18.28'
+            dependency 'org.projectlombok:lombok:1.18.30'
 
             dependency 'tk.mybatis-jakarta:mapper-spring-boot-starter:1.0.0'
 
             dependency 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
-            dependency 'com.github.ben-manes.caffeine:caffeine:3.1.7'
-            dependency 'org.redisson:redisson-spring-boot-starter:3.23.1'
+            dependency 'com.github.ben-manes.caffeine:caffeine:3.1.8'
+            dependency 'org.redisson:redisson-spring-boot-starter:3.23.5'
         }
     }
 
@@ -94,8 +93,14 @@ configure(javaProjects) { project ->
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     }
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    ext {
+        artifactId = name
+    }
 
     test {
         useJUnitPlatform()

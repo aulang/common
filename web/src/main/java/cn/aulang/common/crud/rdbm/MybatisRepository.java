@@ -1,10 +1,10 @@
 package cn.aulang.common.crud.rdbm;
 
-import cn.aulang.common.exception.SaveException;
-import cn.aulang.common.exception.SearchException;
 import cn.aulang.common.crud.GenericRepository;
 import cn.aulang.common.crud.Page;
 import cn.aulang.common.crud.id.IdEntity;
+import cn.aulang.common.exception.SaveException;
+import cn.aulang.common.exception.SearchException;
 import tk.mybatis.mapper.annotation.RegisterMapper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.entity.Example;
@@ -158,15 +158,24 @@ public interface MybatisRepository<T extends IdEntity<K>, K extends Serializable
     /**
      * Generic method to save an object - handles both update and insert.
      *
-     * @param object the object to save
+     * @param object      the object to save
+     * @param excludeNull exclude null values?
      */
     @Override
-    default void saveOrUpdate(T object) {
+    default void saveOrUpdate(T object, boolean excludeNull) {
         int affected;
         if (!object.isNew() && exists(object.getId())) {
-            affected = updateByPrimaryKey(object);
+            if (excludeNull) {
+                affected = updateByPrimaryKeySelective(object);
+            } else {
+                affected = updateByPrimaryKey(object);
+            }
         } else {
-            affected = insert(object);
+            if (excludeNull) {
+                affected = insertSelective(object);
+            } else {
+                affected = insert(object);
+            }
         }
         if (affected == 0) {
             throw new SaveException("save entity fail:" + object);
