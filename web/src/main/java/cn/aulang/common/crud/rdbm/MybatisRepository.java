@@ -158,6 +158,16 @@ public interface MybatisRepository<T extends IdEntity<K>, K extends Serializable
     /**
      * Generic method to save an object - handles both update and insert.
      *
+     * @param object the object to save
+     */
+    @Override
+    default void saveOrUpdate(T object) {
+        saveOrUpdate(object, true);
+    }
+
+    /**
+     * Generic method to save an object - handles both update and insert.
+     *
      * @param object      the object to save
      * @param excludeNull exclude null values?
      */

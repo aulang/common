@@ -1,8 +1,8 @@
 package cn.aulang.common.crud;
 
 
-import cn.aulang.common.exception.SearchException;
 import cn.aulang.common.crud.id.IdEntity;
+import cn.aulang.common.exception.SearchException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -60,6 +60,13 @@ public interface GenericRepository<T extends IdEntity<K>, K extends Serializable
      * Generic method to update an object
      */
     void update(T object);
+
+    /**
+     * Generic method to save an object - handles both update and insert.
+     *
+     * @param object the object to save
+     */
+    void saveOrUpdate(T object);
 
     /**
      * Generic method to save an object - handles both update and insert.
